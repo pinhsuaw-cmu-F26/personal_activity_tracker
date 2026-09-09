@@ -1,0 +1,21 @@
+{
+  "name": "personal-activity-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A client-server personal activity tracker prototype.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  }
+}
