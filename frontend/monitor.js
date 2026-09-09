@@ -40,8 +40,9 @@ function render() {
 }
 
 function cardTemplate(activity) {
-  const time = new Date(activity.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  return `<article class="activity-card"><header><div><div class="activity-type">${activity.type}</div><div class="activity-time">${time}</div></div><button class="delete-button" data-id="${activity.id}" aria-label="Delete ${activity.type}">×</button></header><div class="activity-stats"><div><span class="stat-label">Duration</span><span class="stat-value">${activity.duration} min</span></div><div><span class="stat-label">Calories</span><span class="stat-value">${activity.calories} kcal</span></div><div><span class="stat-label">Heart rate</span><span class="stat-value">${activity.averageHeartRate} bpm</span></div><div><span class="stat-label">${activity.distance === undefined ? 'Session' : 'Distance'}</span><span class="stat-value">${activity.distance === undefined ? 'Indoor' : `${activity.distance} mi`}</span></div></div></article>`;
+  const icons = { Walking: '♧', Running: '↗', Pickleball: '⌁', Tennis: '◇', Hiking: '♒', Swimming: '≋' };
+  const distance = activity.distance === undefined ? '' : `${activity.distance} mi | `;
+  return `<article class="activity-card"><span class="activity-icon" aria-hidden="true">${icons[activity.type] || '•'}</span><div class="activity-type">${activity.type}</div><div class="activity-summary">${activity.duration} min | ${distance}${activity.calories} calories</div><div class="heart-rate" aria-label="Average heart rate">♥ ${activity.averageHeartRate} bpm</div><button class="delete-button" data-id="${activity.id}" aria-label="Delete ${activity.type}">×</button></article>`;
 }
 
 async function loadActivities() {
@@ -60,12 +61,21 @@ async function deleteActivity(id) {
 
 function showToast(message) { toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2600); }
 
+function parseDateInput(value) {
+  const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return null;
+  const [, month, day, year] = match;
+  const date = new Date(`${year}-${month}-${day}T00:00:00`);
+  if (date.getFullYear() !== Number(year) || date.getMonth() + 1 !== Number(month) || date.getDate() !== Number(day)) return null;
+  return `${year}-${month}-${day}`;
+}
+
 document.querySelector('#current-date').textContent = dateFormatter.format(new Date());
 document.querySelector('#filter-form').addEventListener('submit', event => {
   event.preventDefault();
-  const startDate = document.querySelector('#start-date').value;
-  const endDate = document.querySelector('#end-date').value;
-  if (!startDate || !endDate || startDate > endDate) return showToast('Choose a valid date range');
+  const startDate = parseDateInput(document.querySelector('#start-date').value);
+  const endDate = parseDateInput(document.querySelector('#end-date').value);
+  if (!startDate || !endDate || startDate > endDate) return showToast('Use MM/DD/YYYY for a valid date range');
   activeRange = { startDate, endDate };
   loadActivities().catch(() => showToast('Could not apply filter'));
 });

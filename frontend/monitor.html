@@ -30,7 +30,7 @@
     </section>
     <section class="filter-panel">
       <div><p class="eyebrow">FOCUS YOUR VIEW</p><h2>Filter by date</h2></div>
-      <form id="filter-form" class="filter-form"><label>From<input id="start-date" type="date"></label><label>To<input id="end-date" type="date"></label><button class="button primary" type="submit">Apply filter</button><button class="button ghost" id="clear-filter" type="button">Clear</button></form>
+      <form id="filter-form" class="filter-form"><label>From<input id="start-date" type="text" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10" aria-label="Start date, MM/DD/YYYY"></label><label>To<input id="end-date" type="text" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10" aria-label="End date, MM/DD/YYYY"></label><button class="button primary" type="submit">Apply filter</button><button class="button ghost" id="clear-filter" type="button">Clear</button></form>
     </section>
     <p id="toast" class="toast" role="status"></p>
   </main>
