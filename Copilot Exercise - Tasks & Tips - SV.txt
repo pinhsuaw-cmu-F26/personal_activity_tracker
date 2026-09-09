@@ -1,0 +1,195 @@
+﻿Personal Activity Tracker - A GitHub Copilot Exercise
+Prerequisites
+1. You have access to GitHub Copilot Pro through GitHub Education Benefits. You must have been approved through your GitHub account used for the course and you must have redeemed the Copilot Pro coupon in your account. Without redeeming the coupon, Copilot Pro is not enabled. Note that Copilot Pro is a personal benefit, not attached to the GitHub organization used in the course or to your team repo. 
+2. You added the Copilot-related extensions to VS Code. 
+3. You logged in to your GitHub account from within VS Code when asked.
+4. You are a member of the GitHub organization used for your team (cmu-fse-o1 to cmu-fse-o6), not just an outside collaborator of your team repo. If you haven’t accepted your invitation, accept it now! 
+Goals
+Build a functional prototype for a non-trivial application. The app you will build is the Personal Activity Tracker. You will build it using VS Code and GitHub Copilot! In GitHub Copilot, choose any LLM model and version you want (several versions of Claude, Gemini, and GPT models are available in Copilot Pro). 
+
+
+Try to rely on Copilot as much as possible, including updating the generated code, fixing bugs, installing the dependencies, executing terminal commands (e.g., for local installation of the database), etc.
+
+
+Alternate between Copilot’s Agent, Edit, and Ask modes (see quick reference below). Experiment with these different modes to get an idea of how they behave. Sometimes they behave in very similar manner (e.g., Edit and Agent modes can be indistinguishable at times), other times one mode is more effective or cautious than the other depending on your goal. 
+App Description
+The Personal Activity Tracker (PAT) is a simple web application that tracks the exercise regimen of a single user as a set of dated activities. The app doesn’t have a registration or login function. Each activity has a type (Walking, Running, Pickleball, Swimming, Hiking), a timestamp, a duration in minutes, an energy expenditure in calories, and an average heart rate in beats per minute (bpm). All activity types, except Pickleball, also have a distance specified in miles. 
+Architecture and Technologies
+PAT is a classical client-server app.The backend consists of an Activity Server and a database. The Activity Server is responsible for receiving new activities of the user through a REST API and persisting them in the database. The user accesses their activities through the Activity Monitor page. The user can also visualize their activities as a chart on the Activity Trend page. These two pages fetch the user activities from the Activity Server using the REST API to display them to the user. 
+
+
+There is no user interface to add new activities: assume that new activities are added by any external application by calling the REST API of the Activity Server. We won’t create that external app (e.g., it can be a wearable app, like a fitness tracker). Instruct Copilot not to create an activity creation page, and if it does, instruct it to remove it. 
+Backend
+
+
+* Activity Server: Implemented using Node.js, Express.js, Socket.io, and other common npm packages as needed. 
+   * Implements the models and controllers and serves all the static artifacts, including the two pages used in the frontend. 
+   * Uses an ODM or ORM to interface with the Activity Database. 
+      * Obvious alternatives for the ODM or ORM are Mongoose ODM for MongoDB and Sequelize ORM for a SQL database. 
+* Database: Datastore for storing the activities. Persists the models. Implemented using a chosen database management system. 
+   * The database management system must be a light-weight, free community edition suitable for local development. You may ask Copilot to pick one for you, but it’s best to pick the alternative with which you are familiar. Obvious alternatives are: MongoDB (Community Edition), MySQL (Community Edition), and SQLite. 
+* Model and Schema: The only model used in the app is the Activity. An instance of this model has these attributes:
+* type (Walking, Pickleball, Tennis, Hiking, Running, Swimming)
+* duration (minutes)
+* distance (miles) - optional; required for all activity types, except Pickleball
+* energy expenditure (calories)
+* average heart rate (bpm, or beats per minute)
+* timestamp (standard date format with day, month, year, hours, and minutes)
+* id: a unique ID assigned by the Activity Server upon persisting a new activity
+Frontend
+Implemented using HTML, CSS, JavaScript, Socket.io and other client-side Javascript resources as needed. No front-end frameworks are used. Uses the flexbox model for page layout for all pages.  
+
+
+The Frontend has two pages that implement these two views:
+* Activity Monitor: Lists the user’s all activities and allows the user to filter them. 
+* Activity Trend: Charts the user’s recent activities.   
+Code Organization
+This is a mono-repo app. The code structure should obey separation of concerns. The backend code and the frontend code are contained in their own, properly named subfolders. The backend folder contains the models and the control logic for satisfying RESTful HTTP requests and serving the static pages. The frontend folder contains HTML, CSS, and JavaScript code for the two views.
+
+
+In the frontend, HTML (layout), CSS (styling), and JavaScript (behavior) are placed into separate files. This organization avoids inline JavaScript and inline CSS in HTML files, obeying separation of concerns. 
+Testing
+Since there is no UI for adding new activities, to manually test the application, you will need to add new activities by issuing RESTful HTTP requests using a REST client tool. You can use any tool, such as Postman or Curl, but I suggest the VS code REST Client extension, which is text-based and super easy to use. Try asking Copilot to install the REST Client extension into VS Code, and then ask it to create an example REST Client .http  file in a subfolder called tests after you have built the backend. Ask it to exercise all the REST endpoints defined so far. 
+Task 
+Your goal is to build something approximate, imperfect, but working, as fast as possible following all the above constraints. The other goal is to find out how much you know about Copilot and how effectively you can use it. 
+
+
+A. Go to your team’s GitHub organization (cmu-fse-o1 to cmu-fse-o6). This is where your team repo is located. Create a private repo in your GitHub class organization using this repo naming convention:
+      
+Copilot-andrewid-cmu-F26 (please obey the naming convention)
+
+
+Therefore the repo’s URL should be github.com/cmu-fse-ox/Copilot-andrewid-cmu-F26, where cmu-fse-ox is the name of your team repo’s GitHub organization. 
+
+
+IDE Tip - VS Code Desktop or GitHub Codespace? Create a GitHub codespace rather than using VS Code desktop as your IDE so you can get started right away. Make sure GitHub Copilot and GitHub Copilot Chat extensions are installed and you can use them with your GitHub Education Student Benefits. GitHub Codespaces (GitHub’s VS-Code based cloud IDE is freely available through the class organization,  sometimes provides more options, expanded/latest functionality, and access to the latest models not yet available on the desktop version.) 
+
+
+B. Choose the database you will use. Create a README.md file for now (rather a copilot-instructions.md file). Populate it with a description by borrowing excerpts from the above specification and tweaking them (make sure to specify your choice of the database management system). In Agent mode, ask Copilot to set up the project using the README.md file (attach it to the prompt), with a proper folder structure and all the needed configuration files and dependencies. Instruct Copilot to only add boilerplate code, and not yet add any code that implements any app functionality. We just want a skeletal app for now. Ask Copilot to install all the dependencies. Commit and push your changes. 
+
+
+C. Now review the rest of the specification below where you will find the wireframes for the UI pages and detailed functional requirements. Try to build the functionality step-by-step using this new information, starting with the Activity Server (backend). Test the backend (ask Copilot to do this). And then implementing the frontend step-by-step, first the Activity Monitor page, and finally (time permitting), the Activity Trend page. In each step, you may upload the corresponding wireframes and add separate instructions files to your project in a subfolder called docs for that step and reference these files from your prompts.
+
+
+After each step, before proceeding to the next step, commit and push your changes, test the app manually, tweak it when you need it, and fix the bugs if you can, and then commit and push your changes again. Use Copilot as much as possible for all activities (fixing bugs, modifying the code, debugging, installing packages, executing terminal commands, etc). Experiment as much as you can to maximize your AI use. Take a note of what works well, what doesn’t work well, and what fails. 
+
+
+When the time is up: STOP, push your latest changes to your repo, and share your experience with the class. Your goal is to figure out what can be done within the given time, and not to actually create a perfect, full functioning app.
+
+
+Good luck! 
+Wireframes
+Wireframes for the two pages of the Personal Activity Tracker app are provided below. 
+
+
+To download both wireframes as a single .png file, use this link to the image file 
+To download only the Activity Monitor wireframe, use this link to the image file
+To download only the Activity Trend wireframe, use this link to the image file
+  
+
+Ignore the light-gray trend line on the Activity Trend page. It’s not used. 
+Functional Requirements
+Activity Server
+
+
+* Whenever a new activity is created, the Activity Server pushes the new activity to the Activity Monitor. 
+* The REST API of the Activity Server consists of these three endpoints: 
+   * POST /activities, with the request body including the data for the new activity, allows an external application to create a new activity, and returns in the response the created activity with a server-assigned unique ID
+   * GET /activities, allows the Activity Monitor or external application to fetch all activities. 
+   * GET /activities/start-date/:end-date, allows the Activity Monitor or an external application to fetch all activities between a given date range specified in the URL as path parameters in the format YYYY-MM-DD.
+   * DELETE /activities/:id, where :id is the unique ID of an existing activity assigned by the Activity Server. Allows an external application to delete an existing activity.
+   * DELETE /activities, allows an external application to delete all activities using a password. The password is included in the request body and verified by the Activity Server.
+Activity Monitor page
+* At the top of the Activity Monitor page: the title “My Activities” is displayed followed by the current date. 
+* Upon loading the page, the Activity Monitor fetches the user’s activities from the Activity Server and displays them in time order, with the most recent activity displayed at the top. 
+* The user can scroll through the Activity Monitor to view older activities using a vertical scroll bar.  
+* Activities for the same day are grouped together and displayed under the timestamp of that activity as a list of horizontally stacked cards.
+* Timestamps are displayed as days of week (as “Monday”, “Tuesday”, etc.) for the last seven activities, including the current day.
+* Activities from the current day are displayed under the timestamp “Today”. 
+* The timestamps for the activities older than seven days are displayed in a standard date format: e.g., “Wed August 7, 2025”. The time (hours and minutes) of an activity is omitted in the timestamp.
+* The user can filter activities by providing a date range at the bottom pane of the Activity Monitor to display only the activities in the given date range. 
+* The activity filter can be cleared to display all activities in the normal manner. 
+* Whenever a new activity is created on the Activity Server, the Activity Monitor page receives a push notification and dynamically updates the page to add the latest activity to the top of the page. 
+Activity Trend page
+* On the Activity Monitor Page, the user can chart the trend of their activities for the past week by clicking on the Trend button (represented by a line-chart icon), which takes the user to the Activity Trend page. 
+* The Activity Trend page displays the title “Weekly Trend” at the top, together with the date range representing the last 7 days (including the current day, or today).
+* Below the title is a line chart of activities for the last seven days, including the current day (today), with the vertical axis displaying the total energy expenditure for each day in calories and the horizontal axis representing the days of week for the last seven days. 
+* The user can return to the Activity Monitor page by clicking on the Monitor button at the bottom. 
+* Implementation notes for generating the line chart in the Activity Trend page: ask Copilot to identify a suitable client-side graph/visualization library to use.  
+Copilot Quick Reference
+
+
+GitHub Copilot offers several modes for interacting with AI assistance in your coding environment. Each mode can optionally be augmented with specific goals, specific assistants (subagents), and contexts using optional Action `/` (Slash) and Contextual `@` (At) commands.
+
+
+Add the following to a Copilot-Cheatsheet.md file in your repo for quick access. 
+
+
+---
+
+
+## **Copilot Mode Tips**  
+- Prefer **Agent mode** for tasks that span multiple files, branches, or require repo-level changes.
+- Attach context: go to the most relevant file, and attach other relevant files to the prompt for Copilot to consider. If the whole project should be considered, try @workspace. 
+- Use **at `@` to specify a specific extension to help Copilot.
+- Add **`/` commands** to further specify a direct action or workflow you want Copilot to execute.
+
+
+---
+
+
+## **Ask Mode**
+- **Purpose:** Get instant code answers, explanations, or snippets in response to short questions. When you don’t know something, use Copilot’s Ask mode instead of a Google or Stackoverflow search. 
+
+
+---
+
+
+## **Edit Mode**
+- **Purpose:** Directly modify code (refactor, fix, document) using AI.
+
+
+---
+
+
+## **Agent Mode**
+- **Purpose:** Delegate complex, multi-step tasks to Copilot Coding Agent, which can perform actions (e.g., code changes, branch operations, PR creation) across your repo.
+- **Capabilities:**  
+  - Performs multi-step coding tasks (refactoring, bug fixing, documentation, etc.).
+  - Can create branches, push changes, open pull requests.
+  - Handles tasks that require deeper repo context, not just inline code changes.
+  - Can figure out and execute terminal commands. 
+
+
+---
+
+
+## **Plan Mode**
+- Pre-plan code changes without making any actual changes and with ability to review the steps, ask questions, and make changes. 
+- See https://www.youtube.com/shorts/rxIjBKM-XvU
+
+
+---
+
+
+## Embellishing Prompts with Starters: Adding **Context (`#`), Extension (`@`), Command (`/`)** 
+
+
+- **Hashtag `#`: Attache context (can be any file or setting), can also use “Add Context”
+- **Slash `/`**: Used to trigger specific actions or workflows. Type `/ ` in the prompt window to see available actions. Often used with an `@` command to specify the context or target assistant (subagent). 
+- ** At `@`**: Used to mention specific assistant or extension directly, helpful when you want to be explicit and multiple assistants can help with similar actions
+
+
+When in doubt, omit starters. Many goals can be achieved in multiple modes, with or without any starters, with similar effects. 
+
+
+Common prompt starters are:
+
+
+ - `@workspace` – Describe something that you want to do in the current project when the goal needs the whole project.
+- `@workspace`/explain` – Explain code or concepts.
+- `@workspace /tests` – Generate unit tests.
+- `@workspace /fix` – Fix bugs.
+-  `@vscode  /search` – Search the workspace..
+-  `@terminal` – Do something in the terminal.
+-  `@terminal /explain` – Explain something in the terminal.

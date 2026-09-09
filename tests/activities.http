@@ -1,0 +1,42 @@
+### Health check
+GET http://localhost:3000/health
+
+### Create a walking activity
+POST http://localhost:3000/activities
+Content-Type: application/json
+
+{
+  "type": "Walking",
+  "duration": 45,
+  "distance": 2.8,
+  "calories": 230,
+  "averageHeartRate": 118,
+  "timestamp": "2026-09-09T08:30:00.000Z"
+}
+
+### Create a pickleball activity
+POST http://localhost:3000/activities
+Content-Type: application/json
+
+{
+  "type": "Pickleball",
+  "duration": 60,
+  "calories": 420,
+  "averageHeartRate": 142,
+  "timestamp": "2026-09-08T18:00:00.000Z"
+}
+
+### List all activities
+GET http://localhost:3000/activities
+
+### Filter by date range
+GET http://localhost:3000/activities?startDate=2026-09-01&endDate=2026-09-09
+
+### Delete one activity (replace 1)
+DELETE http://localhost:3000/activities/1
+
+### Delete all activities
+DELETE http://localhost:3000/activities
+Content-Type: application/json
+
+{ "password": "pat-local-delete" }

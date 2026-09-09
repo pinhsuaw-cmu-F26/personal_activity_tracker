@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Activities | PAT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/monitor.html"><span class="brand-mark">+</span><span>PAT</span></a>
+      <nav aria-label="Primary navigation"><a class="nav-link active" href="/monitor.html">Monitor</a><a class="nav-link" href="/trend.html">Trend</a></nav>
+    </header>
+    <section class="page-heading">
+      <div><p class="eyebrow">PERSONAL ACTIVITY TRACKER</p><h1>My Activities</h1><p id="current-date" class="muted"></p></div>
+      <div class="live-status"><span class="pulse"></span>Live sync</div>
+    </section>
+    <section class="summary-grid" aria-label="Activity summary">
+      <div class="summary-item"><span class="summary-label">Activities</span><strong id="activity-count">0</strong></div>
+      <div class="summary-item"><span class="summary-label">Total time</span><strong><span id="total-duration">0</span><small> min</small></strong></div>
+      <div class="summary-item"><span class="summary-label">Calories</span><strong><span id="total-calories">0</span><small> kcal</small></strong></div>
+    </section>
+    <section class="activity-panel">
+      <div class="panel-heading"><div><p class="eyebrow">YOUR MOVEMENT</p><h2>Recent sessions</h2></div><a class="icon-button" href="/trend.html" aria-label="View weekly trend" title="View weekly trend">↗</a></div>
+      <div id="activity-list" class="activity-list"><div class="empty-state">Loading your activities...</div></div>
+    </section>
+    <section class="filter-panel">
+      <div><p class="eyebrow">FOCUS YOUR VIEW</p><h2>Filter by date</h2></div>
+      <form id="filter-form" class="filter-form"><label>From<input id="start-date" type="date"></label><label>To<input id="end-date" type="date"></label><button class="button primary" type="submit">Apply filter</button><button class="button ghost" id="clear-filter" type="button">Clear</button></form>
+    </section>
+    <p id="toast" class="toast" role="status"></p>
+  </main>
+  <script src="/socket.io/socket.io.js"></script><script src="/monitor.js"></script>
+</body>
+</html>
