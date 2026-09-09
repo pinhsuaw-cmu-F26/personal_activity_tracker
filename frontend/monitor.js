@@ -61,12 +61,21 @@ async function deleteActivity(id) {
 
 function showToast(message) { toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2600); }
 
+function parseDateInput(value) {
+  const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return null;
+  const [, month, day, year] = match;
+  const date = new Date(`${year}-${month}-${day}T00:00:00`);
+  if (date.getFullYear() !== Number(year) || date.getMonth() + 1 !== Number(month) || date.getDate() !== Number(day)) return null;
+  return `${year}-${month}-${day}`;
+}
+
 document.querySelector('#current-date').textContent = dateFormatter.format(new Date());
 document.querySelector('#filter-form').addEventListener('submit', event => {
   event.preventDefault();
-  const startDate = document.querySelector('#start-date').value;
-  const endDate = document.querySelector('#end-date').value;
-  if (!startDate || !endDate || startDate > endDate) return showToast('Choose a valid date range');
+  const startDate = parseDateInput(document.querySelector('#start-date').value);
+  const endDate = parseDateInput(document.querySelector('#end-date').value);
+  if (!startDate || !endDate || startDate > endDate) return showToast('Use MM/DD/YYYY for a valid date range');
   activeRange = { startDate, endDate };
   loadActivities().catch(() => showToast('Could not apply filter'));
 });
