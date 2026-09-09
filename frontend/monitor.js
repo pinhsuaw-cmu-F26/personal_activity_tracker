@@ -40,8 +40,9 @@ function render() {
 }
 
 function cardTemplate(activity) {
-  const time = new Date(activity.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  return `<article class="activity-card"><header><div><div class="activity-type">${activity.type}</div><div class="activity-time">${time}</div></div><button class="delete-button" data-id="${activity.id}" aria-label="Delete ${activity.type}">×</button></header><div class="activity-stats"><div><span class="stat-label">Duration</span><span class="stat-value">${activity.duration} min</span></div><div><span class="stat-label">Calories</span><span class="stat-value">${activity.calories} kcal</span></div><div><span class="stat-label">Heart rate</span><span class="stat-value">${activity.averageHeartRate} bpm</span></div><div><span class="stat-label">${activity.distance === undefined ? 'Session' : 'Distance'}</span><span class="stat-value">${activity.distance === undefined ? 'Indoor' : `${activity.distance} mi`}</span></div></div></article>`;
+  const icons = { Walking: '♧', Running: '↗', Pickleball: '⌁', Tennis: '◇', Hiking: '♒', Swimming: '≋' };
+  const distance = activity.distance === undefined ? '' : `${activity.distance} mi | `;
+  return `<article class="activity-card"><span class="activity-icon" aria-hidden="true">${icons[activity.type] || '•'}</span><div class="activity-type">${activity.type}</div><div class="activity-summary">${activity.duration} min | ${distance}${activity.calories} calories</div><div class="heart-rate" aria-label="Average heart rate">♥ ${activity.averageHeartRate} bpm</div><button class="delete-button" data-id="${activity.id}" aria-label="Delete ${activity.type}">×</button></article>`;
 }
 
 async function loadActivities() {
